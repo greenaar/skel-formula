@@ -1,0 +1,26 @@
+{#- Default values applied on top of anything set in pillar.
+
+   ssh_agent_autostart is off by default: auto-starting an ssh-agent and
+   running ssh-add from .bashrc means a passphrase prompt (or an ssh-add
+   error, for accounts with no key) on every new interactive shell. Fine
+   for a personal workstation account, surprising for a skel applied
+   fleet-wide -- so it's opt-in per pillar rather than on by default.
+
+   use_default/custom_source/includes control /etc/skel/.bashrc's
+   content -- see README for the full explanation. Short version:
+   use_default (default True) includes this formula's built-in body;
+   custom_source (a salt:// path), if set, replaces it; includes is an
+   ordered list of extra paths to conditionally source afterward (e.g.
+   '$HOME/.bashrc_local' so each user can layer in their own tweaks). #}
+{%- set skel_defaults = {
+    'enabled': True,
+    'mode': '0644',
+    'editor': 'nano',
+    'ssh_agent_autostart': False,
+    'use_default': True,
+    'custom_source': '',
+    'includes': [],
+} %}
+
+{%- set skel = skel_defaults.copy() %}
+{%- do skel.update(pillar.get('skel', {})) %}

@@ -1,0 +1,20 @@
+#!/bin/bash
+# ~/.bashrc: managed by Salt (skel formula).
+#
+# This file is intentionally just a series of conditional includes so the
+# actual content can be swapped out from pillar without touching this
+# wrapper. See the skel formula's README for skel:use_default,
+# skel:custom_source, and skel:includes.
+
+# If not running interactively, don't do anything.
+case $- in
+    *i*) ;;
+    *) return;;
+esac
+
+{%- if body %}
+[ -f /etc/skel/.bashrc_default ] && . /etc/skel/.bashrc_default
+{%- endif %}
+{%- for path in includes %}
+[ -f {{ path }} ] && . {{ path }}
+{%- endfor %}

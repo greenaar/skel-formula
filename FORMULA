@@ -1,0 +1,9 @@
+name: skel
+os: Debian, Raspbian, Ubuntu
+os_family: Debian
+version: 1.0.0
+release: 1
+minimum_version: 3006
+summary: 'skel formula'
+description: 'Manages /etc/skel/.bashrc (and /etc/skel/.bashrc_default) — the template bash profile copied into newly created user home directories (by useradd/adduser at account creation time). It does not touch ~/.bashrc for any account that already exists; re-running this formula'
+top_level_dir: skel

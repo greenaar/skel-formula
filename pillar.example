@@ -1,0 +1,32 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+#
+# Sample pillar for the skel formula. Every key is optional; the formula
+# is fully functional with no pillar at all (see defaults in map.jinja).
+---
+skel:
+  enabled: true          # false -> removes /etc/skel/.bashrc (and
+                          # .bashrc_default) instead
+  mode: '0644'           # ALWAYS quote this -- see README for why
+  editor: nano           # sets $EDITOR/$VISUAL in the built-in default body
+  ssh_agent_autostart: false   # true -> auto-start ssh-agent + ssh-add
+                                # from every new interactive shell (see
+                                # README before enabling this fleet-wide)
+
+  # /etc/skel/.bashrc is a small loader that conditionally sources
+  # /etc/skel/.bashrc_default followed by whatever's in `includes`, below.
+  # See README for the full explanation.
+
+  use_default: true      # false -> don't ship this formula's built-in
+                          # bashrc body at all (ignored if custom_source
+                          # is set -- custom_source always wins)
+  # custom_source: salt://mysite/files/custom_bashrc   # fully replace the
+                          # built-in body with your own salt:// source,
+                          # still rendered with template: jinja and the
+                          # same editor/ssh_agent_autostart context
+
+  includes:
+    # Extra files conditionally sourced (`[ -f FILE ] && . FILE`), in
+    # order, after the body above. Typically used so each user can drop
+    # a ~/.bashrc_local without anyone having to touch the managed file.
+    - $HOME/.bashrc_local
